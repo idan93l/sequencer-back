@@ -1,13 +1,11 @@
 const express = require("express");
 const http = require("http");
 const cors = require("cors");
-const path = require("path");
 const app = express();
 const { Server } = require("socket.io");
 
-const publicPath = path.join(__dirname, "../client/build");
 app.use(cors());
-app.use(express.static(publicPath));
+app.use(express);
 
 const server = http.createServer(app);
 
@@ -27,8 +25,8 @@ io.on("connection", (socket) => {
     io.emit("switch", switchMsm);
   });
 
-  socket.on("rewind", (rewindMessage) => {
-    io.emit("rewind", rewindMessage);
+  socket.on("rewind", () => {
+    io.emit("rewind");
   });
 
   socket.on("clearAll", (clearAllMsg) => {
@@ -43,10 +41,6 @@ io.on("connection", (socket) => {
     console.log("User Disconnected", socket.id);
   });
 });
-
-// app.use("*", (req, res) => {
-//   res.sendFile(path.resolve(`${publicPath}/index.html`));
-// });
 
 const PORT = process.env.PORT || 3001;
 
