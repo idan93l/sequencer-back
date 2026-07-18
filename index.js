@@ -5,7 +5,10 @@ const app = express();
 const { Server } = require("socket.io");
 
 app.use(cors());
-app.use(express);
+
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", service: "sequencer-api" });
+});
 
 const server = http.createServer(app);
 
@@ -17,6 +20,8 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
+  console.log("User connected", socket.id);
+
   socket.on("arm", (armMsg) => {
     io.emit("arm", armMsg);
   });
@@ -45,5 +50,5 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
-  console.log("SERVER RUNNING ON PORT 3001");
+  console.log(`SERVER RUNNING ON PORT ${PORT}`);
 });
